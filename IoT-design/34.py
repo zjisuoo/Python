@@ -11,6 +11,7 @@ small_primes.remove(1) # so let’s remove it
 4 not in small_primes # negated membership test
 small_primes.add(3) # trying to add 3 again
 small_primes
+
 # no change, duplication is not allowed
 bigger_primes = set([5, 7, 11, 13]) # faster creation
 small_primes | bigger_primes 	# union operator ‘|’
