@@ -8,6 +8,6 @@ for item in items :
         break
 
 if found : # we inspect the flag
-    print('At least one item evaluates to True'
+    print('At least one item evaluates to True')
 else :
     print('All items evaluates to False')

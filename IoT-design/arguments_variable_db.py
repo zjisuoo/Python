@@ -2,7 +2,7 @@ def connect(**options) :
     conn_params = {
         'host' : options.get('host', '127.0.0.1'),
         'port' : options.get('post', 5432),
-        'user' : option.get('user', ''),
+        'user' : options.get('user', ''),
         'pwd' : options.get('pwd', ''),
     }
     print(conn_params)

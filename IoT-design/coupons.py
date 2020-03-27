@@ -5,17 +5,17 @@ customers = [
     dict(id = 4, total = 110, coupon_code = 'F15'), # F15 : fixed, ₤15
 ]
 for customer in customers :
-    code = customers['coupon_code']
+    code = customer['coupon_code']
     if code == 'F20' :
         customer['discount'] = 20.0
     elif code == 'F15' :
         customer['discount'] = 15.0
     elif code == 'P30' :
         customer['discount'] = customer['total'] * 0.3
-    elif cod == 'P50' :
+    elif code == 'P50' :
         customer['discount'] = customer['total'] * 0.5
     else :
         customer['discount'] = 0.0
 
 for customer in customers :
-    print(customer['id'], customer['total'], customers['discount'])
+    print(customer['id'], customer['total'], customer['discount'])

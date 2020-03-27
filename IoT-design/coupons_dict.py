@@ -5,13 +5,13 @@ customers = [
     dict(id = 4, total = 110, coupon_code = 'F15'), # F15 : fixed, ₤15
 ]
 discounts = {
-    'F20' : (0.0, 20.0) # each value is (percent, fixed)
+    'F20' : (0.0, 20.0), # each value is (percent, fixed)
     'P30' : (0.3, 0.0),
     'P50' : (0.5, 0.0),
     'F15' : (0.0, 15.0),
 }
 for customer in customers :
-    code = customers['coupon_code']
+    code = customer['coupon_code']
     percent, fixed = discounts.get(code, (0.0, 0.0))
     customer['discount'] = percent * customer['total'] + fixed
 

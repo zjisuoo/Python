@@ -8,5 +8,5 @@ for n in range(2, upto + 1) :
             break
     
     if is_prime : # check on flag
-        prime.append(n)
+        primes.append(n)
 print(primes)

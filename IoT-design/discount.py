@@ -1,4 +1,4 @@
-from datetime import data, timedelta
+from datetime import date, timedelta
 
 today = date.today()
 tomorrow = today + timedelta(days = 1) # today + 1 day is tomorrow
@@ -12,4 +12,4 @@ for product in products :
     product['price'] *= 0.8 # equivalent to applying 20% discount
     print(
         'Price for sku', product['sku'],
-        'is now', products['price'])
+        'is now', product['price'])

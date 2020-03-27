@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/zjisuoo/Documents/zjisuoo_git/Python/venv"
+VIRTUAL_ENV="/Users/zjisuoo/Documents/zjisuoo_git/Python/IoT-design/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
