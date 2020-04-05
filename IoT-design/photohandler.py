@@ -7,7 +7,11 @@ import sys
 
 # set module values
 previewsize = 240, 240
+<<<<<<< HEAD
 defaultimagepreview = "./preview.ppm"
+=======
+defaultimagepreview = "./preeview.ppm"
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952
 filedate_to_use = "Exif DateTime"
 
 # Define expected inputs
@@ -23,7 +27,10 @@ class Photo :
         if self.filevalid == True :
             self.initExif(img)
             self.initDates()
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952
     def initImage(self) :
         """opens the image and confirms if valid, returns Image"""
         try :
@@ -34,7 +41,10 @@ class Photo :
             img = None
             self.filevalid = False
         return img
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952
     def initExif(self, image) :
         """gets any Exif data from the photo"""
         try :
@@ -47,6 +57,7 @@ class Photo :
         except AttributeError :
             print("Image has no Exif Tags")
             self.exifvalid = False
+<<<<<<< HEAD
 
     def initDates(self) :
         """datetimes the date the photo was taken"""
@@ -63,6 +74,17 @@ class Photo :
         createtimeraw = os.path.getctime(self.filename)
         self.filedates["File CreateTime"] = "%s" % datetime.datetime.fromtimestamp(createtimeraw).date()
     
+=======
+    def initDates(self) :
+        """datetimes the date the photo was taken"""
+        # Gather all the times available into YYYY-MM-DD format
+        exif_ids = ["DataeTime", "DateTimeOriginal", "DateTimeDigitized"]
+        for id in exif_ids :
+            dateraw = self.exif_info[id]
+            self.filedates["Exif " + id] = dateraw[:10].replace(":", "-")
+        modtimeraw = os.path.getmtime(self.filename)
+        self.filedates["File ModTime"] = "%s" % datetime.datetime.fromtimestamp(createimeraw).date()
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952
     def getDate(self) :
         """returns the date the image was taken"""
         try :
@@ -71,7 +93,10 @@ class Photo :
             print("Exif Date not found")
             date = self.filedates["File ModTime"]
         return date
+<<<<<<< HEAD
     
+=======
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952
     def previewPhoto(self) :
         """createsa thumbnail image suitable for tk to display"""
         imageview = self.initImage()
@@ -80,6 +105,7 @@ class Photo :
         imageview.save(defaultimagepreview, format = 'ppm')
         return defaultimagepreview
     
+<<<<<<< HEAD
 
 # Module test code
 def dispPreview(aPhoto) :
@@ -143,3 +169,65 @@ def main() :
 if __name__ == '__main__' :
     main()
 # End
+=======
+    # Module test code
+    def disPreview(aPhoto) :
+        """Create a test GUI"""
+        
+        # Define the app window
+        app = TK.Tk()
+        app.title("Photo View Demo")
+        
+        # Define TK objects
+        # create an empty canvas object the same size as the image
+        canvas = TK.Canvas(app, width = previewsize[0], height = previewsize[1])
+        canvas.grid(row = 0, rowspan = 2)
+
+        # Add list box to display the photo data
+        # (including xyscroll bars)
+        photoInfo = TK.Variable()
+        lbPhotoInfo = TK.Listbox(app, listvariable = photoInfo, height = 18, width = 45, fonr = ("monospace", 10))
+        yscroll = TK.Scrollbar(command = lbPhotoInfo.yview, orient = TK.VERTICAL)
+        xscroll = TK.Scrollbar(command = lbPhotoInfo.xview, orient = TK.HORIZONTAL)
+        lbPhotoInfo.configure(xscrollcommand = xscroll.set, yscrollcommand = yscroll.set)
+        yscroll.gird(row = 0, column = 2, sticky = TK.N + TK.S)
+        xscroll.grid(row = 1, column = 1, sticky = TK.N + TK.E + TK.W)
+
+        # Generate the preview image
+        preview_filename = aPhoto.previewPhoto()
+        photoImg = TK.PhotoImage(file = preview_filename)
+
+        # anchor image to NW corner
+        canvas.create_image(0, 0, anchor = TK.NW, image = photoImg)
+
+        # Populate infoList with dates and exif data
+        infoList = []
+        for key, value in aPhoto.filedates.items() :
+            infoList.append(key.ljust(25) + value)
+        if aPhoto.exifvalid :
+            for key, value in aPhoto.exif_info + items() :
+                infoList.append(key.ljust(25) + str(value))
+        
+        # Set listvariable with the infoList
+        photoInfo.set(tuple(infoList))
+
+        app.mainloop()
+    
+    def main() :
+        """called only when run directly, allowing module testing"""
+        # Check the arguments
+        if len(sys.argv) == ARG_LENGTH :
+            print("Command : %s" % (sys.argv))
+
+            # Create an instance of the Photo class
+            viewPhoto = Photo(sys.argv[ARG_IMAGEFILE])
+
+            # Test the module by running a GUI
+            if viewPhoto.filevalid == True :
+                disPreview(viewPhoto)
+            else :
+                print("Usage : photohandler.py imagefile")
+    if __name__ = '__main__' :
+        main()
+    # End
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952

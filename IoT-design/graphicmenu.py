@@ -6,7 +6,11 @@ import threading
 leafpad = ["Leafpad", "leafpad"]
 scratch = ["Scratch", "scratch"]
 pistore = ["Pi Store", "pistore"]
+<<<<<<< HEAD
 app_list = [leafpad, scratch, pistore]
+=======
+app_list [leafpad, scratch, pistore]
+>>>>>>> 2ce0eff65e46c9b50e765b6fdcdf223bfb701952
 APP_NAME = 0
 APP_CMD = 1
 
