@@ -5,7 +5,7 @@ import csv
 import pandas as pd
 import numpy as np
 
-data = pd.read_csv("./seoul_dust_info_2018.csv", encoding="utf-8")
+data = pd.read_csv("./seoul_dust_info_2018.csv", encoding = "utf-8")
 
 # 컬럼명 변경
 data.rename(columns = 
@@ -21,25 +21,21 @@ data.rename(columns =
             "일산화탄소농도(ppm)": "cm", 
             "아황산가스농도(ppm)": "sagas"}, inplace = True)
 
-np.nan = 0
-data_no_zero = data.dropna(how = 'any')
-'''
-                    data.acode != 0, 
-                    data.aname != 0, 
-                    data.scode != 0,
-                    data.sname != 0,
-                    data.fdust != 0,
-                    data.ufdust != 0,
-                    data.ozone != 0,
-                    data.nd != 0,
-                    data.cm != 0,
-                    data.sagas != 0]
-
-
-data_dropna = data.drop(["0"])
-'''
 # 결측치 제거 안함
 print(data)
+print("data shape : ", data.shape)
 
-# 결측치 제거
-print(data_no_zero)
+# 측정값이 모두 0으로 들어간 결측치 list
+zero = list()
+
+# 0으로 들어간 결측치 제거
+for i in range(len(data.index)) :
+    if data['fdust'][i] == 0 and data['ufdust'][i] == 0 and data['ozone'][i] == 0.0 and data['nd'][i] == 0.0 and data['cm'][i] == 0.0 and data['sagas'][i] == 0.0 :
+        data = data.drop(i)
+        zero.append(i)
+
+# 결측치 제거되었는지 확인
+print(data)
+print("data shape : ", data.shape)
+
+data.to_csv("data1.csv", index = False)
