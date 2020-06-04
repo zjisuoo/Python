@@ -1,70 +1,165 @@
 # 데이터 조작
-# 공기질 airquality 컬럼 추가하여 미미세 앱 기준과 같이 영어 단어 값 부여
-# best better good normal bad worse serious worst
-# 초미세먼지 컬럼 제거
-# 필요에 따라 데이터 정규화, 제곱, 다양한 결합값 등 컬럼으로 추가
-# K-NN 알고리즘 이용하여 공기질 예측, 데이터를 저장 된 순서로 7 : 3 으로 나누어 recall, precision, f-score 값 출력화면 캡쳐
 import pandas as pd
 import numpy as np
 
-# 컬럼명 변경, 0이 들어간 결측치 값을 제거한 data1.csv 사용
-data = pd.read_csv("./data1.csv", encoding = "utf-8")
- 
-# 최대, 최소 데이터 정규화
-def min_max_normalize(val) :
-    normalized = list()
+# 문제 1에서 만든 data1.csv 사용
+data = pd.read_csv("./data1.csv", encoding="utf-8")
 
-    for value in val :
-        normalized_num = (value - min(val)) / (max(val) - min(val))
-        normalized.append(round(normalized_num, 3))
+# 컬럼 삭제
+del data["acode"]
+del data["scode"]
+del data["sname"]
+del data["aname"]
+del data["ufdust"]
 
-    return normalized
+# 0, 1, 2, 3, 4, 5, 6, 7
+fdust_air = list()
+ufdust_air = list()
+ozone_air = list()
+nd_air = list()
+cm_air = list()
+sagas_air = list()
+total_air = list()
 
-def z_score_normalized(val) :
-    zNormalized = list()
-
-    for value in val :
-        zNormalized_num = (value - np.mean(val)) / np.std(val)
-        zNormalized.append(round(zNormalized_num, 3))
+for i in range(len(data)) :
+    # 미세먼지
+    if data['fdust'][i] >= 0 and data['fdust'][i] <= 15 :
+        fdust_air.append(7) # 최고
+    elif data['fdust'][i] >= 16 and data['fdust'][i] <= 30 :
+        fdust_air.append(6) # 좋음
+    elif data['fdust'][i] >= 31 and data['fdust'][i] <= 40 :
+        fdust_air.append(5) # 양호
+    elif data['fdust'][i] >= 41 and data['fdust'][i] <= 50 :
+        fdust_air.append(4) # 보통
+    elif data['fdust'][i] >= 51 and data['fdust'][i] <= 75 :
+        fdust_air.append(3) # 나쁨
+    elif data['fdust'][i] >= 76 and data['fdust'][i] <= 100 :
+        fdust_air.append(2) # 상당히 나쁨
+    elif data['fdust'][i] >= 101 and data['fdust'][i] <= 150 :
+        fdust_air.append(1) # 매우 나쁨
+    elif data['fdust'][i] >= 151 :
+        fdust_air.append(0) # 최악
     
-    return zNormalized
+    # 오존
+    if data['ozone'][i] >= 0 and data['ozone'][i] < 0.02 :
+        ozone_air.append(7) # 최고
+    elif data['ozone'][i] >= 0.02 and data['ozone'][i] < 0.03 :
+        ozone_air.append(6) # 좋음
+    elif data['ozone'][i] >= 0.03 and data['ozone'][i] < 0.06 :
+        ozone_air.append(5) # 양호
+    elif data['ozone'][i] >= 0.06 and data['ozone'][i] < 0.09 :
+        ozone_air.append(4) # 보통
+    elif data['ozone'][i] >= 0.09 and data['ozone'][i] < 0.012 :
+        ozone_air.append(3) # 나쁨
+    elif data['ozone'][i] >= 0.012 and data['ozone'][i] < 0.015 :
+        ozone_air.append(2) # 상당히 나쁨
+    elif data['ozone'][i] >= 0.015 and data['ozone'][i] < 0.038 :
+        ozone_air.append(1) # 매우 나쁨
+    elif data['ozone'][i] >= 0.038 :
+        ozone_air.append(0) # 최악
+    
+    # 이산화질소
+    if data['nd'][i] >= 0 and data['nd'][i] < 0.02 :
+        nd_air.append(7) # 최고
+    elif data['nd'][i] >= 0.02 and data['nd'][i] < 0.03 :
+        nd_air.append(6) # 좋음
+    elif data['nd'][i] >= 0.03 and data['nd'][i] < 0.05 :
+        nd_air.append(5) # 양호
+    elif data['nd'][i] >= 0.05 and data['nd'][i] < 0.06 :
+        nd_air.append(4) # 보통
+    elif data['nd'][i] >= 0.06 and data['nd'][i] < 0.13 :
+        nd_air.append(3) # 나쁨
+    elif data['nd'][i] >= 0.13 and data['nd'][i] < 0.2 :
+        nd_air.append(2) # 상당히 나쁨
+    elif data['nd'][i] >= 0.2 and data['nd'][i] < 1.1 :
+        nd_air.append(1) # 매우 나쁨
+    elif data['nd'][i] >= 1.1 and data['nd'][i] < 2 :
+        nd_air.append(0) # 최악
 
-def MinMaxScaler(val) :
-    numerator = val - np.min(val, 0)
-    denominator = np.max(val, 0) - np.min(val, 0)
-    return numerator / (denominator + 1e-7)
+    # 일산화탄소
+    if data['cm'][i] >= 0 and data['cm'][i] < 1 :
+        cm_air.append(7) # 최고
+    elif data['cm'][i] >= 1 and data['cm'][i] < 2 :
+        cm_air.append(6) # 좋음
+    elif data['cm'][i] >= 2 and data['cm'][i] < 5.5 :
+        cm_air.append(5) # 양호
+    elif data['cm'][i] >= 5.5 and data['cm'][i] < 9 :
+        cm_air.append(4) # 보통
+    elif data['cm'][i] >= 9 and data['cm'][i] < 12 :
+        cm_air.append(3) # 나쁨
+    elif data['cm'][i] >= 12 and data['cm'][i] < 15 :
+        cm_air.append(2) # 상당히 나쁨
+    elif data['cm'][i] >= 15 and data['cm'][i] < 32 :
+        cm_air.append(1) # 매우 나쁨
+    elif data['cm'][i] >= 32 :
+        cm_air.append(0) # 최악
+    
+    # 아황산가스
+    if data['sagas'][i] >= 0 and data['sagas'][i] < 0.01 :
+        sagas_air.append(7) # 최고
+    elif data['sagas'][i] >= 0.01 and data['sagas'][i] < 0.02 :
+        sagas_air.append(6) # 좋음
+    elif data['sagas'][i] >= 0.02 and data['sagas'][i] < 0.04 :
+        sagas_air.append(5) # 양호
+    elif data['sagas'][i] >= 0.04 and data['sagas'][i] < 0.05 :
+        sagas_air.append(4) # 보통
+    elif data['sagas'][i] >= 0.05 and data['sagas'][i] < 0.1 :
+        sagas_air.append(3) # 나쁨
+    elif data['sagas'][i] >= 0.1 and data['sagas'][i] < 0.15 :
+        sagas_air.append(2) # 상당히 나쁨
+    elif data['sagas'][i] >= 0.15 and data['sagas'][i] < 0.6 :
+        sagas_air.append(1) # 매우 나쁨
+    elif data['sagas'][i] >= 0.6 :
+        sagas_air.append(0) # 최악
 
-# 미세먼지 max : 217 / min : 0
-f_dust = min_max_normalize(data['fdust'])
-# print(f_dust)
-data['fdust_Normalized'] = f_dust
-# print(data)
+for i in range(len(data)) :
+    if min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 0 :
+        total_air.append("worst")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 1 :
+        total_air.append("serious")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 2 :
+        total_air.append("worse")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 3 :
+        total_air.append("bad")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 4 :
+        total_air.append("normal")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 5 :
+        total_air.append("good")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 6 :
+        total_air.append("better")
+    elif min(fdust_air[i], ozone_air[i], nd_air[i], cm_air[i], sagas_air[i]) == 7 :
+        total_air.append("best")
 
-# 초미세먼지 max : 985 / min : 0
-uf_dust = min_max_normalize(data['ufdust'])
-# print(uf_dust)
-data['ufdust_Normalized'] = uf_dust
-# print(data)
+# airquality 컬럼 추가
+data['airquality'] = total_air
 
-# 미세먼지 max : 217 / min : 0
-z_f_dust = z_score_normalized(data['fdust'])
-# print(z_f_dust)
-data['Z_fdust_Normalized'] = z_f_dust
-# print(data)
+airindex = list()
+for i in range(len(data)) :
+    if data['airquality'][i] == 'best' :
+        airindex.append(1)
+    elif data['airquality'][i] == "better" :
+        airindex.append(2)
+    elif data['airquality'][i] == "good" :
+        airindex.append(3)
+    elif data['airquality'][i] == 'normal' :
+        airindex.append(4)
+    elif data['airquality'][i] == "bad" :
+        airindex.append(5)
+    elif data['airquality'][i] == "worse" :
+        airindex.append(6)
+    elif data['airquality'][i] == 'serious' :
+        airindex.append(7)
+    elif data['airquality'][i] == "worst" :
+        airindex.append(8)
 
-# 초미세먼지 max : 985 / min : 0
-z_uf_dust = z_score_normalized(data['ufdust'])
-# print(z_uf_dust)
-data['Z_ufdust_Normalized'] = z_uf_dust
-# print(data)
+# air_index 컬럼 추가
+data['air_index'] = airindex
 
-o_zone = min_max_normalize(data['ozone'])
-data['Ozone_Normalized'] = o_zone
+print("data shape : ", data.shape)
 
-z_o_zone = z_score_normalized(data['ozone'])
-data['Z_ozone_Normalized'] = z_o_zone
-# print(data)
+data = data[['cdate', 'fdust', 'ozone', 'nd', 'cm', 'sagas', 'airquality', 'air_index']]
 
-mm_fdust = MinMaxScaler(data['fdust'])
-data['MinMaxScaler'] = mm_fdust
 print(data)
+
+# data를 data2.csv 파일로 저장, index값 제거
+data.to_csv("data2.csv", index = False)
